@@ -47,6 +47,16 @@ for ticker in tickers:
     net_profit_margin = (net_income / total_revenue) * 100 if net_income and total_revenue else None
     current_ratio = (current_assets/current_liabilities)if current_assets  and current_liabilities else None
     asset_turnover_ratio = (total_revenue/ average_total_assets)if total_revenue and average_total_assets  else None
+      #Determine financial health
+    if current_ratio and asset_turnover_ratio and net_profit_margin:
+        if 1.5 <= current_ratio <= 3 and asset_turnover_ratio > 0.5 and net_profit_margin > 10:
+            health = "Healthy"
+        elif current_ratio < 1 or asset_turnover_ratio < 0.3 or net_profit_margin < 5:
+            health = "High Risk"
+        else:
+            health = "Moderate Risk"
+    else:
+        health = "Insufficient Data"
     row = {field: info.get(field, None) for field in fields if field != "Net Income" and field != "Total Revenue" and field != "Current Assets" and field != "Current Liabilities" and field != "Total Assets"}
     
     # Add financial data to row
@@ -59,7 +69,7 @@ for ticker in tickers:
         "Net Profit Margin (%)": net_profit_margin, 
         "Current Ratio" : current_ratio,
         "Asset Turnover Ratio" : asset_turnover_ratio,          
-        
+        "Financial Health": health
     })
 
     data.append(row)
@@ -70,4 +80,4 @@ df = pd.DataFrame(data)
 #  Display
 pd.set_option('display.max_columns', None)
 
-df[["symbol","marketCap","currentPrice","fiftyTwoWeekHigh","fiftyTwoWeekLow","Net Profit Margin (%)", "Current Ratio","Asset Turnover Ratio" ]]  
+df[["symbol","marketCap","currentPrice","fiftyTwoWeekHigh","fiftyTwoWeekLow","Net Profit Margin (%)", "Current Ratio","Asset Turnover Ratio","Financial Health" ]]  
